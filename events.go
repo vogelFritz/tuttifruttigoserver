@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net"
 
 	si "github.com/vogelFritz/tuttifruttigoserver/socketinterface"
@@ -13,24 +12,22 @@ func addEventListeners(server *si.Server) {
 
 	})
 	server.AddEventListener("nuevaSala", func(roomData string, socket net.Conn) {
-		server.AddToRoom(roomData, socket)
-		fmt.Println(roomData)
 		var s sala
 		json.Unmarshal([]byte(roomData), &s)
-		fmt.Println(s.Nombre)
+		server.AddToRoom(s.Nombre, socket)
 		server.Emit(si.EmissionParams{
 			Event: "nuevaSala",
-			Data:  s.Nombre,
+			Data:  roomData,
 		})
 	})
-	server.AddEventListener("unirse", func(roomName string, socket net.Conn) {
-		server.AddToRoom(roomName, socket)
-		s := sala{Nombre: roomName, Jugadores: []string{"pedro", "juan"}}
-		encodedData, _ := json.Marshal(s)
+	server.AddEventListener("unirse", func(roomData string, socket net.Conn) {
+		var jsonMap map[string]string
+		json.Unmarshal([]byte(roomData), &jsonMap)
+		server.AddToRoom(jsonMap["room"], socket)
 		server.Emit(si.EmissionParams{
-			Room:  roomName,
+			Room:  jsonMap["room"],
 			Event: "unirse",
-			Data:  string(encodedData),
+			Data:  jsonMap["player"],
 		})
 	})
 }
