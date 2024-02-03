@@ -33,4 +33,18 @@ func addEventListeners(server *si.Server) {
 			Data:  playerName,
 		})
 	})
+	server.AddEventListener("fieldSuggestion", func(fieldsSuggestion string, socket si.Socket) {
+		server.Emit(si.EmissionParams{
+			Room:  socket.Room,
+			Event: "fieldSuggestion",
+			Data:  fieldsSuggestion,
+		})
+	})
+	server.AddEventListener("voted", func(voteData string, socket si.Socket) {
+		server.Emit(si.EmissionParams{
+			Room:  socket.Room,
+			Event: "voted",
+			Data:  voteData,
+		})
+	})
 }
