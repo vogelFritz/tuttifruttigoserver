@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math/rand"
 
 	si "github.com/vogelFritz/tuttifruttigoserver/socketinterface"
 )
@@ -52,6 +53,12 @@ func addEventListeners(server *si.Server) {
 			Room:  socket.Room,
 			Event: "startGame",
 			Data:  voteData,
+		})
+		newLetter := string(rune(65 + rand.Int()%26))
+		server.Emit(si.EmissionParams{
+			Room:  socket.Room,
+			Event: "newLetter",
+			Data:  newLetter,
 		})
 	})
 }
