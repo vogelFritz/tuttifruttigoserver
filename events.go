@@ -48,17 +48,30 @@ func addEventListeners(server *si.Server) {
 			Data:  voteData,
 		})
 	})
-	server.AddEventListener("startGame", func(voteData string, socket si.Socket) {
+	server.AddEventListener("startGame", func(_ string, socket si.Socket) {
 		server.Emit(si.EmissionParams{
 			Room:  socket.Room,
 			Event: "startGame",
-			Data:  voteData,
 		})
 		newLetter := string(rune(65 + rand.Int()%26))
 		server.Emit(si.EmissionParams{
 			Room:  socket.Room,
 			Event: "newLetter",
 			Data:  newLetter,
+		})
+	})
+	server.AddEventListener("stop", func(userData string, socket si.Socket) {
+		server.Emit(si.EmissionParams{
+			Room:  socket.Room,
+			Event: "stop",
+			Data:  userData,
+		})
+	})
+	server.AddEventListener("userFieldValues", func(userData string, socket si.Socket) {
+		server.Emit(si.EmissionParams{
+			Room:  socket.Room,
+			Event: "userFieldValues",
+			Data:  userData,
 		})
 	})
 }
